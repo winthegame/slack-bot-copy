@@ -33,7 +33,7 @@ controller.setupWebserver(process.env.PORT,function(err,webserver) {
   controller
     .createHomepageEndpoint(controller.webserver)
     .createOauthEndpoints(controller.webserver,function(err,req,res) {
-      res.end("YO");
+      res.end("Installation successful! Your Slack team can now use Copybot.");
     })
     .createWebhookEndpoints(controller.webserver);
 });
@@ -47,7 +47,13 @@ controller.spawn({
   }
 });
 
+// a list of current channel objects, which have id and name fields.
+// both fields are strings, and the id field does not have a '#' at the front.
 var channels = [];
+/*
+get_channel_by_id() takes the id of a channel (string, without the '#' at the beginning)
+    and returns the name of the channel if it exists, or undefined if it does not
+*/
 function get_channel_by_id(id)
 {
     for (var i = 0; i < channels.length; i++)
@@ -55,15 +61,25 @@ function get_channel_by_id(id)
             return channels[i];
     return undefined;
 }
+/*
+get_channel_list() takes a bot object and uses the bot to get an up-to-date list of channels.
+    It returns nothing, and just updates the global channels variable.
+*/
 function get_channel_list(bot)
 {
     bot.api.channels.list({},function(err,response) {
         for (var i = 0; i < response.channels.length; i++)
             if (response.channels[i].is_channel)
-                channels.push({ id: response.channels[i].id, name: response.channels[i].name });
+                channels.push(response.channels[i]);
     });
 }
 
+/*
+get_channels_from_message() takes a message object and parses it to find any channels referenced.
+    channel references always look like "<#{ID}>", so that's what it looks for.
+    This function returns an array of objects of position and channel id, where
+    position is the index of the '<' for that channel reference in the message text, and id is the channel id.
+*/
 function get_channels_from_message(message)
 {
     var channels = [];
@@ -76,23 +92,26 @@ function get_channels_from_message(message)
         message = message.substring(0,index) + '\\' + message.substring(index + 1);
         
         var channel_id = submessage.substring(0, submessage.indexOf('>'));
-        channels.push({ pos: index-1, id: channel_id });
+        channels.push({ pos: index-1, id: channel_id});
     }
     return channels;
 }
 
-function get_member_channels(bot){
-    channels = [];
-    for (var i = 0; i < channels.response.length; i++)
-    {
-        if(channels.response[i].is_member)
-            channels.push(channels.response[i].id);
+/*
+Returns a list of the ids of the channels this bot is a member of
+*/
+function get_member_channels(bot)
+{
+    var member_channels = [];
+    for (var i = 0; i < channels.length; i++) {
+        if (channels[i].is_member)
+            member_channels.push(channels[i].id);
     }
-    return channels;
+    return member_channels;
 }
 
 controller.on('direct_message,direct_mention,mention', function(bot, message) {
-  console.log("Working...");
+  console.log("Message recieved...");
   if (message.text === "\\update_channels")
   {
       bot.reply(message, "Updating channel list.");
@@ -121,23 +140,29 @@ controller.on('direct_message,direct_mention,mention', function(bot, message) {
       bot.reply(message, "Copying \"" + message.text + "\" to the following channels: " + channel_ids.join(', '));
   }
   // --end debugging--
-  
+
   // actually copy messages
   for (var i = 0; i < channels.length; i++)
-  {
-      var channel_id = get_channel_by_id(channels[i].id).id;
-      if (get_member_channels(bot).indexOf(channel_id) > -1)
+  {   
+      var channel = get_channel_by_id(channels[i].id);
+      if (!channel)
+          var dummy = 0; //Not sure if I should make a reply here.
+      else if (get_member_channels(bot).indexOf(channel.id) > -1)
       {
           var message = {
               text: message.text,
-              channel: channel_id // with or without the '#', bot.say() doesn't work...
+              channel: channel.id // with or without the '#', bot.say() doesn't work...
           };
           bot.say(message); // y u n0 work m8
       }
       else 
       {
-          bot.reply(message, "Please enter \"invite @copybot\" in channel " + channels[i].name 
-              + " so that Copybot can write to this channel.");
+          var text = "Hey man, I'd love to copy this but I can't. Can you /invite @copybot to channel <#" + channel.id + ">?"
+          var message = {
+              text: text,
+              channel: message.channel
+          };
+          bot.say(message)
       }
   }
 })

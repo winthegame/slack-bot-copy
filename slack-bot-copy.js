@@ -21,7 +21,7 @@ var token = "xoxb-17169750593-hDdhiQ3vVM0VKr7FQmxudQCE";
 var clientId = "12990615124.17328333063";
 var clientSecret = "4b873107f908889566c71be61d07a6b2";
 
-if (!token) {
+if (!process.env.token) {
   console.log('Error: Specify token in environment');
   process.exit(1);
 }
@@ -32,8 +32,8 @@ var controller = Botkit.slackbot({
 });
 
 controller.configureSlackApp({
-  clientId: clientId,
-  clientSecret: clientSecret,
+  clientId: process.env.clientId,
+  clientSecret: process.env.clientSecret,
   redirect_uri: 'http://localhost:3002',
   scopes: ['team:read','users:read','channels:read','im:read','im:write','groups:read','emoji:read']
 });
@@ -56,7 +56,7 @@ controller.setupWebserver(process.env.PORT, function(err,webserver) {
     .createWebhookEndpoints(controller.webserver);
 });
 
-/*
+
 controller.spawn({
   token: process.env.token
 }).startRTM(function(err,bot,payload) {
@@ -67,7 +67,7 @@ controller.spawn({
     throw new Error(err);
   }
 });
-*/
+
 //dictionary of channel_id:channel for every channel in every team this bot is a member of.
 var channels = {};
 

@@ -56,6 +56,7 @@ controller.spawn({
   token: process.env.token
 }).startRTM(function(err,bot,payload) {
   update_channels(bot);
+  trackBot(bot);
   if (err) {
     p(err);
     throw new Error(err);
@@ -69,7 +70,7 @@ var channels = {};
 and calls a function that requires an accurate list of channels at the end.*/
 function update_channels(bot, cb, args)
 {
-    trackBot(bot);
+    p("updated");
     bot.api.channels.list({},function(err,response) {
         for (var i = 0; i < response.channels.length; i++)
             if (response.channels[i].is_channel)
@@ -167,13 +168,18 @@ function trackBot(bot) {
 controller.storage.teams.all(function(err, all_team_data) {
   p(1);
    for (var team in all_team_data) {
+     p(0);
      var bot = controller.spawn(all_team_data[team])
      .startRTM(function(err) {
+       p(-1);
        update_channels(bot);
-       if (err) 
+       if (err) {
+         p(err);
          throw new Error(err);
-       else 
-         trackBot(bot);
+       }
+       else {
+         p(-2);
+         trackBot(bot);}
      });
    }
    p(2);

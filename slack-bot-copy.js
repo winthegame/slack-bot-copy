@@ -15,11 +15,12 @@ var Botkit = require('botkit');
 function p(x) {
   console.log(x);
 }
-p(Botkit);
+
+/*
 process.env.token = "xoxb-17169750593-hDdhiQ3vVM0VKr7FQmxudQCE";
 process.env.clientId = "12990615124.17328333063";
 process.env.clientSecret = "4b873107f908889566c71be61d07a6b2";
-
+*/
 if (!process.env.token) {
   console.log('Error: Specify token in environment');
   process.exit(1);
@@ -37,9 +38,8 @@ controller.configureSlackApp({
   scopes: ['team:read','users:read','channels:read','im:read','im:write','groups:read','emoji:read']
 });
 
-controller.setupWebserver(process.env.PORT||80, function(err,webserver) {
+controller.setupWebserver(process.env.PORT, function(err,webserver) {
   // set up web endpoints for oauth, receiving webhooks, etc.
-  p(process.env.PORT);
   controller
     .createHomepageEndpoint(controller.webserver)
     .createOauthEndpoints(controller.webserver,function(err,req,res) {

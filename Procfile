@@ -1,1 +1,1 @@
-slackbot: node slack-bot-copy.js
+web: node slack-bot-copy.js

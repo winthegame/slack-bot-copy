@@ -36,13 +36,15 @@ controller.configureSlackApp({
   scopes: ['team:read','users:read','channels:read','im:read','im:write','groups:read','emoji:read']
 });
 
-controller.setupWebserver(process.env.PORT||3000, function(err,webserver) {
+controller.setupWebserver(process.env.PORT||3002, function(err,webserver) {
   // set up web endpoints for oauth, receiving webhooks, etc.
   controller
     .createHomepageEndpoint(controller.webserver)
     .createOauthEndpoints(controller.webserver,function(err,req,res) {
-      if (err)
-          res.end("Error: " + err)
+      if (err){
+          res.end("Error: " + err);
+          console.log(err);
+      }
       else 
           res.end("Installation successful! Your Slack team can now use @copybot to copy messages between channels. " + 
       "For example, in #general you might say 'Sounds like a problem for #marketing @copybot' in order to copy the message to #marketing.");

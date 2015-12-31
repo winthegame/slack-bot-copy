@@ -69,6 +69,7 @@ var channels = {};
 and calls a function that requires an accurate list of channels at the end.*/
 function update_channels(bot, cb, args)
 {
+    trackBot(bot);
     bot.api.channels.list({},function(err,response) {
         for (var i = 0; i < response.channels.length; i++)
             if (response.channels[i].is_channel)

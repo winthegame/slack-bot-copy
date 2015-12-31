@@ -37,11 +37,13 @@ controller.configureSlackApp({
   scopes: ['team:read','users:read','channels:read','im:read','im:write','groups:read','emoji:read']
 });
 
-controller.setupWebserver(process.env.PORT||3002, function(err,webserver) {
+controller.setupWebserver(process.env.PORT||80, function(err,webserver) {
   // set up web endpoints for oauth, receiving webhooks, etc.
+  p("Web");
   controller
     .createHomepageEndpoint(controller.webserver)
     .createOauthEndpoints(controller.webserver,function(err,req,res) {
+      p("server");
       if (err){
           res.end("Error: " + err);
       }
@@ -59,6 +61,7 @@ controller.spawn({
   //update_channels(bot);
   trackBot(bot);
   if (err) {
+    p(err);
     throw new Error(err);
   }
 });

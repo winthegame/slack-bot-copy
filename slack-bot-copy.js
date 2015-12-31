@@ -50,6 +50,7 @@ controller.setupWebserver(process.env.PORT||3002, function(err,webserver) {
       
     })
     .createWebhookEndpoints(controller.webserver);
+    p("server done");
 });
 
 controller.spawn({
@@ -58,7 +59,6 @@ controller.spawn({
   update_channels(bot);
   trackBot(bot);
   if (err) {
-    p(err);
     throw new Error(err);
   }
 });
@@ -70,13 +70,13 @@ var channels = {};
 and calls a function that requires an accurate list of channels at the end.*/
 function update_channels(bot, cb, args)
 {
-    p("updated");
     bot.api.channels.list({},function(err,response) {
         for (var i = 0; i < response.channels.length; i++)
             if (response.channels[i].is_channel)
                 channels[response.channels[i].id] = response.channels[i];
         if (cb)
           cb(bot, args);
+        p("done updating");
     });
 }
 
@@ -168,18 +168,15 @@ function trackBot(bot) {
 controller.storage.teams.all(function(err, all_team_data) {
   p(1);
    for (var team in all_team_data) {
-     p(0);
      var bot = controller.spawn(all_team_data[team])
      .startRTM(function(err) {
-       p(-1);
        update_channels(bot);
        if (err) {
-         p(err);
          throw new Error(err);
        }
        else {
-         p(-2);
-         trackBot(bot);}
+         trackBot(bot);
+       }
      });
    }
    p(2);
@@ -187,6 +184,7 @@ controller.storage.teams.all(function(err, all_team_data) {
 
 controller.on('create_bot',function(bot, config) {
   if (_bots[bot.config.token]) {
+    p(0);
     // already online! do nothing.
   } else {
     p(3);

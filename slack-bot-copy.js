@@ -43,7 +43,6 @@ controller.setupWebserver(process.env.PORT||3002, function(err,webserver) {
     .createOauthEndpoints(controller.webserver,function(err,req,res) {
       if (err){
           res.end("Error: " + err);
-          console.log(err);
       }
       else 
           res.end("Installation successful! Your Slack team can now use @copybot to copy messages between channels. " + 
@@ -70,11 +69,14 @@ and calls a function that requires an accurate list of channels at the end.*/
 function update_channels(bot, cb, args)
 {
     bot.api.channels.list({},function(err,response) {
+        p(1);
         for (var i = 0; i < response.channels.length; i++)
             if (response.channels[i].is_channel)
                 channels[response.channels[i].id] = response.channels[i];
+        p(2);
         if (cb)
           cb(bot, args);
+        p(3);
     });
 }
 

@@ -40,6 +40,7 @@ controller.configureSlackApp({
 
 controller.setupWebserver(process.env.PORT, function(err,webserver) {
   // set up web endpoints for oauth, receiving webhooks, etc.
+  p("web");
   controller
     .createHomepageEndpoint(controller.webserver)
     .createOauthEndpoints(controller.webserver,function(err,req,res) {

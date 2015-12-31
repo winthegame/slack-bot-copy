@@ -15,6 +15,7 @@ var Botkit = require('botkit');
 function p(x) {
   console.log(x);
 }
+
 process.env.token = "xoxb-17169750593-hDdhiQ3vVM0VKr7FQmxudQCE";
 process.env.clientId = "12990615124.17328333063";
 process.env.clientSecret = "4b873107f908889566c71be61d07a6b2";
@@ -55,7 +56,7 @@ controller.setupWebserver(process.env.PORT||3002, function(err,webserver) {
 controller.spawn({
   token: process.env.token
 }).startRTM(function(err,bot,payload) {
-  update_channels(bot);
+  //update_channels(bot);
   trackBot(bot);
   if (err) {
     throw new Error(err);
@@ -70,7 +71,6 @@ and calls a function that requires an accurate list of channels at the end.*/
 function update_channels(bot, cb, args)
 {
     bot.api.channels.list({},function(err,response) {
-      p("error" + err);
         for (var i = 0; i < response.channels.length; i++)
             if (response.channels[i].is_channel)
                 channels[response.channels[i].id] = response.channels[i];

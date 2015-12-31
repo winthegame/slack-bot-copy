@@ -39,7 +39,7 @@ controller.configureSlackApp({
 
 controller.setupWebserver(process.env.PORT||80, function(err,webserver) {
   // set up web endpoints for oauth, receiving webhooks, etc.
-  p("Web");
+  p(process.env.PORT);
   controller
     .createHomepageEndpoint(controller.webserver)
     .createOauthEndpoints(controller.webserver,function(err,req,res) {
@@ -55,6 +55,7 @@ controller.setupWebserver(process.env.PORT||80, function(err,webserver) {
     .createWebhookEndpoints(controller.webserver);
 });
 
+/*
 controller.spawn({
   token: process.env.token
 }).startRTM(function(err,bot,payload) {
@@ -65,7 +66,7 @@ controller.spawn({
     throw new Error(err);
   }
 });
-
+*/
 //dictionary of channel_id:channel for every channel in every team this bot is a member of.
 var channels = {};
 

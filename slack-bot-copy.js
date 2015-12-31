@@ -70,7 +70,7 @@ and calls a function that requires an accurate list of channels at the end.*/
 function update_channels(bot, cb, args)
 {
     bot.api.channels.list({},function(err,response) {
-        p(response); p(err);
+        p("error " + err);
         for (var i = 0; i < response.channels.length; i++)
             if (response.channels[i].is_channel)
                 channels[response.channels[i].id] = response.channels[i];

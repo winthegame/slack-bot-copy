@@ -15,7 +15,9 @@ var Botkit = require('botkit');
 function p(x) {
   console.log(x);
 }
-
+process.env.token = "xoxb-17169750593-hDdhiQ3vVM0VKr7FQmxudQCE";
+process.env.clientId = "12990615124.17328333063";
+process.env.clientSecret = "4b873107f908889566c71be61d07a6b2";
 if (!process.env.token) {
   console.log('Error: Specify token in environment');
   process.exit(1);

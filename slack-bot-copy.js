@@ -50,7 +50,6 @@ controller.setupWebserver(process.env.PORT||3002, function(err,webserver) {
       
     })
     .createWebhookEndpoints(controller.webserver);
-    p("server done");
 });
 
 controller.spawn({

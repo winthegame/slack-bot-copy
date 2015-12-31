@@ -57,6 +57,7 @@ controller.spawn({
 }).startRTM(function(err,bot,payload) {
   update_channels(bot);
   if (err) {
+    p(err);
     throw new Error(err);
   }
 });
@@ -69,14 +70,11 @@ and calls a function that requires an accurate list of channels at the end.*/
 function update_channels(bot, cb, args)
 {
     bot.api.channels.list({},function(err,response) {
-        p(1);
         for (var i = 0; i < response.channels.length; i++)
             if (response.channels[i].is_channel)
                 channels[response.channels[i].id] = response.channels[i];
-        p(2);
         if (cb)
           cb(bot, args);
-        p(3);
     });
 }
 
@@ -120,7 +118,7 @@ controller.on('direct_message,direct_mention,mention', function(bot, message) {
 })
 
 function message_respond(bot, message) {
-  console.log("Message recieved...");
+  p("Message recieved...");
   // get channels that we will copy to
   var message_channels = get_channels_from_message(message);
 
@@ -166,6 +164,7 @@ function trackBot(bot) {
 }
 
 controller.storage.teams.all(function(err, all_team_data) {
+  p(1);
    for (var team in all_team_data) {
      var bot = controller.spawn(all_team_data[team])
      .startRTM(function(err) {
@@ -176,25 +175,28 @@ controller.storage.teams.all(function(err, all_team_data) {
          trackBot(bot);
      });
    }
+   p(2);
 });
 
 controller.on('create_bot',function(bot, config) {
   if (_bots[bot.config.token]) {
     // already online! do nothing.
   } else {
-    
+    p(3);
     bot.startRTM(function(err) {
+      p(4);
       if (!err) 
         trackBot(bot);
       bot.startPrivateConversation({user: config.createdBy},function(err,convo) {
         if (err) {
-          console.log(err);
+          p(err);
         } else {
           convo.say('I am a bot that has just joined your team');
           convo.say('You must now /invite me to a channel so that I can be of use!');
+          p(5);
         }
       });
-
+      p(6);
     })
   }
 })

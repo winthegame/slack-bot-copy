@@ -12,6 +12,11 @@
 
 var Botkit = require('botkit');
 
+var controller = Botkit.slackbot({
+  debug: false,
+  json_file_store: './db_copybot/'
+});
+
 if (process.env.clientId && process.env.clientSecret) {
   controller.configureSlackApp({
     clientId: process.env.clientId,
@@ -39,11 +44,6 @@ if (process.env.clientId && process.env.clientSecret) {
   console.log ("process.env.clientId && process.env.clientSecret were not specified in environment.");
   console.log ("Thus this bot cannot offer oauth.");
 }
-
-var controller = Botkit.slackbot({
-  debug: false,
-  json_file_store: './db_copybot/'
-});
   
 if (process.env.token) {
   controller.spawn({

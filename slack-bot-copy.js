@@ -163,7 +163,7 @@ function trackBot(bot) {
 }
 
 controller.storage.teams.all(function(err, all_team_data) {
-  p("Loading stored teams...")
+  p("Loading stored teams..." + all_team_data)
    for (var team in all_team_data) {
      var bot = controller.spawn(all_team_data[team])
      .startRTM(function(err) {

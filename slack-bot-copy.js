@@ -23,7 +23,7 @@ if (!process.env.token) {
 
 var controller = Botkit.slackbot({
   debug: false,
-  json_file_store: './db_copybot/'
+  json_file_store: process.env.json_file_store
 });
 
 controller.configureSlackApp({

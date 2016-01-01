@@ -9,7 +9,7 @@
   Read all about it here:
     -> http://howdy.ai/botkit
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
-
+var request = require('request');
 var Botkit = require('botkit');
 
 function p(x) {
@@ -35,11 +35,9 @@ controller.configureSlackApp({
 
 controller.setupWebserver(process.env.PORT, function(err,webserver) {
   // set up web endpoints for oauth, receiving webhooks, etc.
-  p("web");
   controller
     .createHomepageEndpoint(controller.webserver)
     .createOauthEndpoints(controller.webserver,function(err,req,res) {
-      p("server");
       if (err){
           res.end("Error: " + err);
       }
@@ -165,6 +163,7 @@ function trackBot(bot) {
 }
 
 controller.storage.teams.all(function(err, all_team_data) {
+  p("Loading stored teams...")
    for (var team in all_team_data) {
      var bot = controller.spawn(all_team_data[team])
      .startRTM(function(err) {
@@ -176,6 +175,7 @@ controller.storage.teams.all(function(err, all_team_data) {
          trackBot(bot);
        }
      });
+     p("loaded");
    }
 });
 
@@ -197,3 +197,5 @@ controller.on('create_bot',function(bot, config) {
     })
   }
 })
+
+request.get("https://copybot.herokuapp.com")

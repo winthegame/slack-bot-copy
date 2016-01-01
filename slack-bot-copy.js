@@ -198,4 +198,3 @@ controller.on('create_bot',function(bot, config) {
   }
 })
 
-request.get("https://copybot.herokuapp.com")

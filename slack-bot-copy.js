@@ -12,50 +12,53 @@
 
 var Botkit = require('botkit');
 
-if (!process.env.token) {
-  console.log('Error: Specify token in environment');
-  process.exit(1);
+if (process.env.clientId && process.env.clientSecret) {
+  controller.configureSlackApp({
+    clientId: process.env.clientId,
+    clientSecret: process.env.clientSecret,
+    redirect_uri: 'http://localhost:3002',
+    scopes: ['team:read','users:read','channels:read','im:read','im:write','groups:read','emoji:read'] //TODO check that these are the right scopes.
+  });
+  
+  controller.setupWebserver(process.env.PORT, function(err,webserver) {
+    // set up web endpoints for oauth, receiving webhooks, etc.
+    controller
+      .createHomepageEndpoint(controller.webserver)
+      .createOauthEndpoints(controller.webserver,function(err,req,res) {
+        if (err) {
+            res.end("Error: " + err);
+        }
+        else 
+            res.end("Installation successful! Your Slack team can now use @copybot to copy messages between channels. " + 
+        "For example, in #general you might say 'Sounds like a problem for #marketing @copybot' in order to copy the message to #marketing.");
+        
+      })
+      .createWebhookEndpoints(controller.webserver);
+  });
+} else {
+  console.log ("process.env.clientId && process.env.clientSecret were not specified in environment.");
+  console.log ("Thus this bot cannot offer oauth.");
 }
 
 var controller = Botkit.slackbot({
   debug: false,
   json_file_store: './db_copybot/'
 });
-
-controller.configureSlackApp({
-  clientId: process.env.clientId,
-  clientSecret: process.env.clientSecret,
-  redirect_uri: 'http://localhost:3002',
-  scopes: ['team:read','users:read','channels:read','im:read','im:write','groups:read','emoji:read'] //TODO check that these are the right scopes.
-});
-
-controller.setupWebserver(process.env.PORT, function(err,webserver) {
-  // set up web endpoints for oauth, receiving webhooks, etc.
-  controller
-    .createHomepageEndpoint(controller.webserver)
-    .createOauthEndpoints(controller.webserver,function(err,req,res) {
-      if (err) {
-          res.end("Error: " + err);
-      }
-      else 
-          res.end("Installation successful! Your Slack team can now use @copybot to copy messages between channels. " + 
-      "For example, in #general you might say 'Sounds like a problem for #marketing @copybot' in order to copy the message to #marketing.");
-      
-    })
-    .createWebhookEndpoints(controller.webserver);
-});
-
-
-controller.spawn({
-  token: process.env.token
-}).startRTM(function(err,bot,payload) {
-  //update_channels(bot);
-  trackBot(bot);
-  if (err) {
-    console.log(err);
-    throw new Error(err);
-  }
-});
+  
+if (process.env.token) {
+  controller.spawn({
+    token: process.env.token
+  }).startRTM(function(err,bot,payload) {
+    //update_channels(bot);
+    trackBot(bot);
+    if (err) {
+      console.log(err);
+      throw new Error(err);
+    }
+  });
+} else {
+  console.log ("process.env.token was not specified in environment. This is ok if you are offering OAUTH.");
+}
 
 //dictionary of channel_id:channel for every channel in every team this bot is a member of.
 var channels = {};

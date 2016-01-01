@@ -9,7 +9,7 @@
   Read all about it here:
     -> http://howdy.ai/botkit
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
-var request = require('request');
+
 var Botkit = require('botkit');
 
 function p(x) {

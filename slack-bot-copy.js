@@ -3,7 +3,7 @@
   Get a Bot token from Slack:
     -> http://my.slack.com/services/new/bot
   Run your bot from the command line:
-    token=<MY TOKEN> node team_bot.js
+    token=<MY TOKEN> node slack-bot-copy.js
 # EXTEND THE BOT:
   Botkit is has many features for building cool and useful bots!
   Read all about it here:
@@ -11,10 +11,6 @@
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 var Botkit = require('botkit');
-p("ran");
-function p(x) {
-  console.log(x);
-}
 
 if (!process.env.token) {
   console.log('Error: Specify token in environment');
@@ -38,7 +34,7 @@ controller.setupWebserver(process.env.PORT, function(err,webserver) {
   controller
     .createHomepageEndpoint(controller.webserver)
     .createOauthEndpoints(controller.webserver,function(err,req,res) {
-      if (err){
+      if (err) {
           res.end("Error: " + err);
       }
       else 
@@ -56,7 +52,7 @@ controller.spawn({
   //update_channels(bot);
   trackBot(bot);
   if (err) {
-    p(err);
+    console.log(err);
     throw new Error(err);
   }
 });
@@ -117,7 +113,7 @@ controller.on('direct_message,direct_mention,mention', function(bot, message) {
 })
 
 function message_respond(bot, message) {
-  p("Message recieved...");
+  console.log("Message recieved...");
   // get channels that we will copy to
   var message_channels = get_channels_from_message(message);
 
@@ -163,7 +159,7 @@ function trackBot(bot) {
 }
 
 controller.storage.teams.all(function(err, all_team_data) {
-  p("Loading stored teams..." + all_team_data)
+  console.log("Loading stored teams..." + all_team_data)
    for (var team in all_team_data) {
      var bot = controller.spawn(all_team_data[team])
      .startRTM(function(err) {
@@ -175,7 +171,7 @@ controller.storage.teams.all(function(err, all_team_data) {
          trackBot(bot);
        }
      });
-     p("loaded");
+     console.log("loaded");
    }
 });
 
@@ -188,7 +184,7 @@ controller.on('create_bot',function(bot, config) {
         trackBot(bot);
       bot.startPrivateConversation({user: config.createdBy},function(err,convo) {
         if (err) {
-          p(err);
+          console.log(err);
         } else {
           convo.say('I am a bot that has just joined your team');
           convo.say('You must now /invite me to a channel so that I can be of use!');

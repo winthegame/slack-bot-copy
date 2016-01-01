@@ -21,7 +21,7 @@ if (process.env.clientId && process.env.clientSecret) {
   controller.configureSlackApp({
     clientId: process.env.clientId,
     clientSecret: process.env.clientSecret,
-    redirect_uri: 'http://localhost:3002',
+    redirect_uri: 'https://slack-bot-copy.herokuapp.com/oauth',
     scopes: ['team:read','users:read','channels:read','im:read','im:write','groups:read','emoji:read'] //TODO check that these are the right scopes.
   });
   

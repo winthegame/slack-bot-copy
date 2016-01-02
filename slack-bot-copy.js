@@ -22,7 +22,7 @@ if (process.env.clientId && process.env.clientSecret) {
     clientId: process.env.clientId,
     clientSecret: process.env.clientSecret,
     redirect_uri: 'https://slack-bot-copy.herokuapp.com/oauth',
-    scopes: ['team:read','users:read','channels:read','im:read','im:write','groups:read','emoji:read'] //TODO check that these are the right scopes.
+    scopes: ['bot']
   });
   
   controller.setupWebserver(process.env.PORT, function(err,webserver) {
@@ -145,10 +145,8 @@ function message_respond(bot, message) {
   for (var i = 0; i < message_channels.length; i++)
   {   
       var channel = channels[message_channels[i].id];
-      if (!channel) {
-          var dummy = 0; //Not sure if I should make a reply here.
+      if (!channel) //Not sure if I should make a reply here.
           console.log("invalid channel: " + message_channels[i].id);
-      }
       else if (get_member_channels(bot).indexOf(channel.id) > -1)
         bot.say({text: newMessageText, channel: channel.id }); 
       else 
@@ -189,8 +187,8 @@ controller.on('create_bot',function(bot, config) {
         if (err) {
           console.log(err);
         } else {
-          convo.say('I am a bot that has just joined your team');
-          convo.say('You must now /invite me to a channel so that I can be of use!');
+          convo.say('Hey!');
+          convo.say('Can you /invite <@' + bot.identity.id + '> to a few channels?');
         }
       });
     })

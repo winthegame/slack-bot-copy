@@ -35,8 +35,8 @@ if (process.env.clientId && process.env.clientSecret) {
             res.end("Error: " + err);
         }
         else 
-            res.end("Installation successful! Your Slack team can now use @copybot to copy messages between channels. " + 
-        "For example, in #general you might say 'Sounds like a problem for #marketing @copybot' in order to copy the message to #marketing.");
+            res.end("Installation successful! Your Slack team can now use @copy to copy messages between channels. " + 
+        "For example, in #general you might say 'Let's talk about this project in #marketing @copy' in order to copy your message to #marketing.");
         
       })
       .createWebhookEndpoints(controller.webserver);
@@ -126,7 +126,7 @@ function message_respond(bot, message) {
   else
       var newMessageText = "<@" + message.user +">: " + message.text
   // strip the message text of stuff we don't actually want to copy
-  // (i.e. "@copybot")
+  // (i.e. "@copy")
   var bot_name = "<@" + bot.identity.id + ">";
   newMessageText = newMessageText.replace(' ' + bot_name, '');
   
@@ -151,7 +151,7 @@ function message_respond(bot, message) {
       else if (get_member_channels(bot).indexOf(channel.id) > -1)
         bot.say({text: newMessageText, channel: channel.id }); 
       else 
-        bot.say({text: "Hey man, I'd love to copy this but I can't. Can you /invite @copybot to channel <#" + channel.id + ">?", channel: message.channel})
+        bot.say({text: "Hey man, I'd love to copy this but I can't. Can you /invite <@" + bot.identity.id + "> to channel <#" + channel.id + ">?", channel: message.channel})
   }
 }
 

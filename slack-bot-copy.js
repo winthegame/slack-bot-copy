@@ -11,10 +11,12 @@
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 var Botkit = require('botkit');
+var mongo_storage = require('./mongo_storage.js')({mongo_uri:  "mongodb://slack-bot-copy:X9wonZj61gM3@ds037145.mongolab.com:37145/slack-bot-copy"});
+//var redis_storage = require('./redis_storage.js')({url: "redis://redistogo:d175f29259bd73e442eefcaeff8e78aa@tarpon.redistogo.com:11895/"});
 
 var controller = Botkit.slackbot({
   debug: false,
-  json_file_store: './db_copybot/'
+  storage: mongo_storage
 });
 
 if (process.env.clientId && process.env.clientSecret) {

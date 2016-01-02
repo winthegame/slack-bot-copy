@@ -1,6 +1,6 @@
 # slack-copy-bot
 
-The Copy Bot is a bot that copies messages from one Slack channel to another. It's very simple. Here's what it does.
+@copybot is a bot that copies messages from one Slack channel to another. It's very simple. Here's what it does.
 
 Let's say I'm in #general and I say
 ```That was super #random @copybot```

@@ -131,17 +131,18 @@ get_channels_from_message() takes a message object and parses it to find any cha
 */
 function get_channels_from_message(message)
 {
-    var channels_in_message = [];
-    while (message.text.indexOf('#') > -1) {
-        var index = message.text.indexOf('#');
-      
-        var submessage = message.text.substring(index + 1);
-        message.text = message.text.substring(0,index) + '\\' + message.text.substring(index + 1);
-        
-        var channel_id = submessage.substring(0, submessage.indexOf('>'));
-        channels_in_message.push(channel_id);
-    }
-    return channels_in_message;
+  var messageText = message.text
+  var channels_in_message = [];
+  while (messageText.indexOf('#') > -1) {
+    var index = messageText.indexOf('#');
+  
+    var submessage = messageText.substring(index + 1);
+    messageText = messageText.substring(0,index) + '\\' + messageText.substring(index + 1);
+    
+    var channel_id = submessage.substring(0, submessage.indexOf('>'));
+    channels_in_message.push(channel_id);
+  }
+  return channels_in_message;
 }
 
 controller.on('direct_message,direct_mention,mention', function(bot, message) {
@@ -149,21 +150,28 @@ controller.on('direct_message,direct_mention,mention', function(bot, message) {
 })
 
 function message_respond(bot, message) {
-  if (channels[message.channel])
-      var newMessageText = "<@" + message.user +"> in <#" + message.channel + ">: " + message.text
-  else
-      var newMessageText = "<@" + message.user +">: " + message.text
-
-  var to_channel_ids = _.uniq(get_channels_from_message(message)); // get channels that we will copy to and remove duplicates
-  console.log(to_channel_ids);
+  var to_channel_ids = _. uniq(get_channels_from_message(message)); // get channels that we will copy to and remove duplicates
   var to_channels = _.pick(channels, to_channel_ids)
-  console.log("to_channels: " + JSON.stringify(to_channels));
+  
+  if (channels[message.channel])
+      var pretext = "<@" + message.user +"> in <#" + message.channel + ">: "
+  else
+      var pretext = "<@" + message.user +">: "
   
   // actually copy messages
   for (to_channel_id in to_channels) {
     if (channels[to_channel_id].is_member)
-      bot.say({text: newMessageText, channel: to_channel_id}); 
+      bot.say({
+        channel: to_channel_id,
+        attachments: [{
+          pretext: pretext,
+          text: message.text
+        }]
+      });
     else 
-      bot.say({text: "Hey man, I'd love to copy this to <#" + to_channel_id + "> but I can't. Can you /invite <@" + bot.identity.id + "> to channel <#" + to_channel_id + ">?", channel: message.channel})
+      bot.say({
+        text: "Hey, I'd love to copy this to <#" + to_channel_id + "> but I can't. Can you /invite <@" + bot.identity.id + "> to channel <#" + to_channel_id + ">?",
+        channel: message.channel
+      });
   }
 }

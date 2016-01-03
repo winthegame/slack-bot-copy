@@ -122,7 +122,7 @@ function message_respond(bot, message) {
   var message_channels = get_channels_from_message(message);
 
   if (channels[message.channel])
-      var newMessageText = "<#" + message.channel + ">: " + message.text
+      var newMessageText = "<@" + message.user +"> in <#" + message.channel + ">: " + message.text
   else
       var newMessageText = "<@" + message.user +">: " + message.text
   // strip the message text of stuff we don't actually want to copy
@@ -188,8 +188,12 @@ controller.on('create_bot',function(bot, config) {
         if (err) {
           console.log(err);
         } else {
-          convo.say('Hey!');
-          convo.say('Can you /invite <@' + bot.identity.id + '> to a few channels?');
+          convo.say("Yo!");
+          convo.say("I'm <@" + bot.identity.id + ">");
+          convo.say("I'm good at moving conversations from one #channel to another.");
+          convo.say("For example, to move a convo to #random, just say something like '...let's move this convo to #random <@" + bot.identity.id + ">");
+          convo.say("But I can't help move convos if I'm not in any channels.");
+          convo.say("Can you /invite <@" + bot.identity.id + "> to a few channels?");
         }
       });
     })

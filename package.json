@@ -6,7 +6,8 @@
   "dependencies": {
     "botkit": "^0.0.4",
     "mongodb": "1.4.x",
-    "monk": "^1.0.1"
+    "monk": "^1.0.1",
+    "underscore": "^1.8.3"
   },
   "devDependencies": {},
   "scripts": {

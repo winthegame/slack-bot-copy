@@ -12,11 +12,17 @@
 
 var Botkit = require('botkit');
 var mongo_storage = require('./mongo_storage.js')({mongo_uri:  "mongodb://slack-bot-copy:X9wonZj61gM3@ds037145.mongolab.com:37145/slack-bot-copy"});
+var _ = require("underscore"); // http://underscorejs.org/
 
 var controller = Botkit.slackbot({
   debug: false,
   storage: mongo_storage
 });
+
+var _bots = {};
+function trackBot(bot) {
+  _bots[bot.config.token] = bot;
+}
 
 if (process.env.clientId && process.env.clientSecret) {
   controller.configureSlackApp({
@@ -41,6 +47,46 @@ if (process.env.clientId && process.env.clientSecret) {
       })
       .createWebhookEndpoints(controller.webserver);
   });
+  
+  controller.storage.teams.all(function(err, all_team_data) {
+    console.log("Loading stored teams..." + all_team_data)
+     for (var team in all_team_data) {
+       var bot = controller.spawn(all_team_data[team])
+       .startRTM(function(err) {
+         update_channels(bot);
+         if (err) {
+           throw new Error(err);
+         }
+         else {
+           trackBot(bot);
+         }
+       });
+       console.log("loaded");
+     }
+  });
+  
+  controller.on('create_bot',function(bot, config) {
+    if (_bots[bot.config.token]) {
+      // already online! do nothing.
+    } else {
+      bot.startRTM(function(err) {
+        if (!err) 
+          trackBot(bot);
+        bot.startPrivateConversation({user: config.createdBy},function(err,convo) {
+          if (err) {
+            console.log(err);
+          } else {
+            convo.say("Yo!");
+            convo.say("I'm <@" + bot.identity.id + ">");
+            convo.say("I'm good at moving conversations from one #channel to another.");
+            convo.say("For example, to move a convo to #random, just say something like '...let's move this convo to #random <@" + bot.identity.id + ">");
+            convo.say("But I can't help move convos if I'm not in any channels.");
+            convo.say("Can you /invite <@" + bot.identity.id + "> to a few channels?");
+          }
+        });
+      })
+    }
+  })
 } else {
   console.log ("process.env.clientId && process.env.clientSecret were not specified in environment.");
   console.log ("Thus this bot cannot offer oauth.");
@@ -68,10 +114,10 @@ var channels = {};
 and calls a function that requires an accurate list of channels at the end.*/
 function update_channels(bot, cb, args)
 {
-    bot.api.channels.list({},function(err,response) {
-        for (var i = 0; i < response.channels.length; i++)
-            if (response.channels[i].is_channel)
-                channels[response.channels[i].id] = response.channels[i];
+    bot.api.channels.list({}, function(err,response) {
+        for (var channel of response.channels)
+            if (channel.is_channel)
+                channels[channel.id] = channel;
         if (cb)
           cb(bot, args);
     });
@@ -85,31 +131,17 @@ get_channels_from_message() takes a message object and parses it to find any cha
 */
 function get_channels_from_message(message)
 {
-    var channels = [];
-    message = message.text;
-    while (message.indexOf('#') > -1)
-    {
-        var index = message.indexOf('#');
+    var channels_in_message = [];
+    while (message.text.indexOf('#') > -1) {
+        var index = message.text.indexOf('#');
       
-        var submessage = message.substring(index + 1);
-        message = message.substring(0,index) + '\\' + message.substring(index + 1);
+        var submessage = message.text.substring(index + 1);
+        message.text = message.text.substring(0,index) + '\\' + message.text.substring(index + 1);
         
         var channel_id = submessage.substring(0, submessage.indexOf('>'));
-        channels.push({ pos: index-1, id: channel_id});
+        channels_in_message.push(channel_id);
     }
-    return channels;
-}
-
-/*
-Returns a list of the ids of the channels this bot is a member of
-*/
-function get_member_channels(bot)
-{
-    var member_channels = [];
-    for (var id in channels) 
-        if (channels[id].is_member)
-            member_channels.push(id);
-    return member_channels;
+    return channels_in_message;
 }
 
 controller.on('direct_message,direct_mention,mention', function(bot, message) {
@@ -117,86 +149,21 @@ controller.on('direct_message,direct_mention,mention', function(bot, message) {
 })
 
 function message_respond(bot, message) {
-  console.log("Message recieved...");
-  // get channels that we will copy to
-  var message_channels = get_channels_from_message(message);
-
   if (channels[message.channel])
       var newMessageText = "<@" + message.user +"> in <#" + message.channel + ">: " + message.text
   else
       var newMessageText = "<@" + message.user +">: " + message.text
-  // strip the message text of stuff we don't actually want to copy
-  // (i.e. "@copy")
-  var bot_name = "<@" + bot.identity.id + ">";
-  newMessageText = newMessageText.replace(' ' + bot_name, '');
+
+  var to_channel_ids = _.uniq(get_channels_from_message(message)); // get channels that we will copy to and remove duplicates
+  console.log(to_channel_ids);
+  var to_channels = _.pick(channels, to_channel_ids)
+  console.log("to_channels: " + JSON.stringify(to_channels));
   
-  /*
-  // --just for debugging--
-  if (message.text.indexOf('debug') > -1)
-  {
-      var channel_ids = [];
-      for (var i = 0; i < message_channels.length; i++)
-          channel_ids.push("<#" + message_channels[i].id + ">");
-      bot.reply(message, "Copying \"" + message.text + "\" to the following channels: " + channel_ids.join(', '));
-  }
-  // --end debugging--
-  */
-
   // actually copy messages
-  for (var i = 0; i < message_channels.length; i++)
-  {   
-      var channel = channels[message_channels[i].id];
-      if (!channel) //Not sure if I should make a reply here.
-          console.log("invalid channel: " + message_channels[i].id);
-      else if (get_member_channels(bot).indexOf(channel.id) > -1)
-        bot.say({text: newMessageText, channel: channel.id }); 
-      else 
-        bot.say({text: "Hey man, I'd love to copy this but I can't. Can you /invite <@" + bot.identity.id + "> to channel <#" + channel.id + ">?", channel: message.channel})
+  for (to_channel_id in to_channels) {
+    if (channels[to_channel_id].is_member)
+      bot.say({text: newMessageText, channel: to_channel_id}); 
+    else 
+      bot.say({text: "Hey man, I'd love to copy this to <#" + to_channel_id + "> but I can't. Can you /invite <@" + bot.identity.id + "> to channel <#" + to_channel_id + ">?", channel: message.channel})
   }
 }
-
-var _bots = {};
-function trackBot(bot) {
-  _bots[bot.config.token] = bot;
-}
-
-controller.storage.teams.all(function(err, all_team_data) {
-  console.log("Loading stored teams..." + all_team_data)
-   for (var team in all_team_data) {
-     var bot = controller.spawn(all_team_data[team])
-     .startRTM(function(err) {
-       update_channels(bot);
-       if (err) {
-         throw new Error(err);
-       }
-       else {
-         trackBot(bot);
-       }
-     });
-     console.log("loaded");
-   }
-});
-
-controller.on('create_bot',function(bot, config) {
-  if (_bots[bot.config.token]) {
-    // already online! do nothing.
-  } else {
-    bot.startRTM(function(err) {
-      if (!err) 
-        trackBot(bot);
-      bot.startPrivateConversation({user: config.createdBy},function(err,convo) {
-        if (err) {
-          console.log(err);
-        } else {
-          convo.say("Yo!");
-          convo.say("I'm <@" + bot.identity.id + ">");
-          convo.say("I'm good at moving conversations from one #channel to another.");
-          convo.say("For example, to move a convo to #random, just say something like '...let's move this convo to #random <@" + bot.identity.id + ">");
-          convo.say("But I can't help move convos if I'm not in any channels.");
-          convo.say("Can you /invite <@" + bot.identity.id + "> to a few channels?");
-        }
-      });
-    })
-  }
-})
-

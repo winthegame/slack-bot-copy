@@ -10,5 +10,6 @@ This is what he'll say in the `#dev` channel:
 ```@rafaelcosman in #support-ios: Let's bring the startup bug up in #dev @copy```
 
 That's it! This is useful for
+
 1. moving conversations from one channel
 2. alerting folks in another channel that they might be interested in the conversation in your channel.

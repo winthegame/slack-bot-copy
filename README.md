@@ -1,4 +1,4 @@
-# slack-copy-bot
+# @copy
 
 @copy is a bot that copies messages from one Slack channel to another. It's simple, free, and open-source. Here's what it does.
 

@@ -16,4 +16,4 @@ That's it! This is useful for
 
 # Privacy
 
-@copy stores none of your messages.
+`@copy` stores none of your messages.

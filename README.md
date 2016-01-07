@@ -2,7 +2,7 @@
 
 @copy is a bot that copies messages from one Slack channel to another. It's simple, free, and open-source. Here's what it does.
 
-Let's say I'm in #support-ios and I say
+Let's say I'm in `#support-ios` and I say
 ```Let's bring the startup bug up in #dev @copy```
 Because I referenced @copy, he'll copy my message to #dev. And he'll also mark it as having come from me in #general.
 

@@ -11,5 +11,5 @@ This is what he'll say in the `#dev` channel:
 
 That's it! This is useful for
 
-1. moving conversations from one channel
-2. alerting folks in another channel that they might be interested in the conversation in your channel.
+1. moving conversations from one channel to another
+2. alerting folks in another channel that they might want to join the conversation in your channel.

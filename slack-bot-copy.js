@@ -11,7 +11,7 @@
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 var Botkit = require('botkit');
-var mongo_storage = require('./mongo_storage.js')({mongo_uri:  "mongodb://slack-bot-copy:X9wonZj61gM3@ds037145.mongolab.com:37145/slack-bot-copy"});
+var mongo_storage = require('./mongo_storage.js')({mongo_uri:  "mongodb://" + process.env.mongoUsername + ":" + process.env.mongoPassword + "@ds037145.mongolab.com:37145/slack-bot-copy"});
 var _ = require("underscore"); // http://underscorejs.org/
 
 var controller = Botkit.slackbot({

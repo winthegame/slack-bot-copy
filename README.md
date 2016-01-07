@@ -13,3 +13,7 @@ That's it! This is useful for
 
 1. moving conversations from one channel to another
 2. alerting folks in another channel that they might want to join the conversation in your channel.
+
+# Privacy
+
+@copy stores none of your messages.

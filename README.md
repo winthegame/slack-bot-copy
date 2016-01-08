@@ -22,4 +22,5 @@ That's it! This is useful for
 ## Privacy
 
 `@copy` stores none of your messages.
-`@copy` cannot join channels by himself. A user must invite him.
+
+`@copy` cannot join channels by himself, a user must invite him.

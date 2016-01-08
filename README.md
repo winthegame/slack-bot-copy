@@ -5,7 +5,7 @@ Click [here](http://slack-bot-copy.herokuapp.com/login) to instantly add `@copy`
 
 ## Usage
 
-Ever find yourself copying a slack message from one channel to another? `@copy` does this for you. It's simple, free, and open-source. Here's how it works:
+Ever find yourself copying a slack message from one channel to another? `@copy` bot does this for you. It's simple, free, and open-source. Here's how it works:
 
 Let's say I'm in `#support-ios` and I say
 ```Let's bring the memory overflow bug up in #dev @copy```

@@ -5,14 +5,14 @@ You're welcome to host this bot yourself! Or you can click [here](http://slack-b
 
 ## Usage
 
-`@copy` is a bot that copies messages from one Slack channel to another. It's simple, free, and open-source. Here's what it does.
+Ever find yourself copying a slack message from one channel to another? `@copy` does this for you. It's simple, free, and open-source. Here's how it works:
 
 Let's say I'm in `#support-ios` and I say
-```Let's bring the startup bug up in #dev @copy```
+```Let's bring the memory overflow bug up in #dev @copy```
 Because I referenced `@copy`, he'll copy my message to `#dev`. And he'll also mark it as having come from me in `#support-ios`.
 
 This is what he'll say in the `#dev` channel:
-```@rafaelcosman in #support-ios: Let's bring the startup bug up in #dev @copy```
+```@rafaelcosman in #support-ios: Let's bring the memory overflow bug up in #dev @copy```
 
 That's it! This is useful for
 

@@ -1,5 +1,10 @@
 # @copy bot
 
+## Installation 
+You're welcome to host this bot yourself! Or you can click [here](slack-bot-copy.herokuapp.com/login) to immidiately add the bot to your Slack.
+
+## Usage
+
 `@copy` is a bot that copies messages from one Slack channel to another. It's simple, free, and open-source. Here's what it does.
 
 Let's say I'm in `#support-ios` and I say
@@ -14,6 +19,6 @@ That's it! This is useful for
 1. moving conversations from one channel to another
 2. alerting folks in another channel that they might want to join the conversation in your channel.
 
-# Privacy
+## Privacy
 
 `@copy` stores none of your messages.

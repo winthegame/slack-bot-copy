@@ -155,7 +155,7 @@ controller.hears(["help"], ["direct_message", "direct_mention", "mention"], func
     convo.say("If I'm useful to you feel free to install me in your other teams or share me with your friends. I'm :free: and :open_book: open source.");
     convo.say("Here's my github repo: https://github.com/winthegame/slack-bot-copy and here's a link to instantly install me in another :slack:Slack slack-bot-copy.herokuapp.com/login");
   });
-}]);
+});
 
 controller.on(["direct_message","direct_mention","mention"], function(bot, message) {
   update_channels(bot, message_respond, message);

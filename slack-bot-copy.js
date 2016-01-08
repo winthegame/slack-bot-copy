@@ -145,7 +145,19 @@ function get_channels_from_message(message)
   return channels_in_message;
 }
 
-controller.on('direct_message,direct_mention,mention', function(bot, message) {
+controller.hears(["help", ["direct_message", "direct_mention", "mention"], function(bot, message) {
+  bot.reply(message, "Hey there <@" + message.user + ">, I'll tell you all about myself in a private message :wink:");
+  
+  bot.startPrivateConversation(message, function(err, convo) {
+    if (err) {console.log(err); return;}
+    convo.say("Hi! Ever found yourself :printer: copying messages to other channels? I make that easy.");
+    convo.say("For example, you might say `Let's ask #dev about the overflow bug <@" + bot.identity.id + ">` and I'll copy your message to `#dev`.");
+    convo.say("If I'm useful to you feel free to install me in your other teams or share me with your friends. I'm :free: and :open_book: open source.");
+    convo.say("Here's my github repo: https://github.com/winthegame/slack-bot-copy and here's a link to instantly install me in another :slack:Slack slack-bot-copy.herokuapp.com/login");
+  });
+}]);
+
+controller.on(["direct_message","direct_mention","mention"], function(bot, message) {
   update_channels(bot, message_respond, message);
 })
 

@@ -145,7 +145,7 @@ function get_channels_from_message(message)
   return channels_in_message;
 }
 
-controller.hears(["help", ["direct_message", "direct_mention", "mention"], function(bot, message) {
+controller.hears(["help"], ["direct_message", "direct_mention", "mention"], function(bot, message) {
   bot.reply(message, "Hey there <@" + message.user + ">, I'll tell you all about myself in a private message :wink:");
   
   bot.startPrivateConversation(message, function(err, convo) {

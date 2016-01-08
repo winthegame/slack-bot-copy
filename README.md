@@ -1,7 +1,7 @@
 # @copy bot
 
 ## Installation 
-You're welcome to host this bot yourself! Or you can click [here](slack-bot-copy.herokuapp.com/login) to immidiately add the bot to your Slack.
+You're welcome to host this bot yourself! Or you can click [here](http://slack-bot-copy.herokuapp.com/login) to immidiately add the bot to your Slack.
 
 ## Usage
 

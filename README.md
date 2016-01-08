@@ -14,10 +14,12 @@ Because I referenced `@copy`, he'll copy my message to `#dev`. And he'll also ma
 This is what he'll say in the `#dev` channel:
 ```@rafaelcosman in #support-ios: Let's bring the memory overflow bug up in #dev @copy```
 
-That's it! This is useful for
+That's it! This simple tool is useful for
 
 1. moving conversations from one channel to another
 2. alerting folks in another channel that they might want to join the conversation in your channel.
+
+And many other things that I haven't even thought of yet! Feel free to tell me how you're using `@copy` -- drop me a line at rafaelcosman@gmail.com.
 
 ## Privacy
 

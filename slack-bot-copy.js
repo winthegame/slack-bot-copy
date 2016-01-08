@@ -165,7 +165,8 @@ function message_respond(bot, message) {
         channel: to_channel_id,
         attachments: [{
           pretext: pretext,
-          text: message.text
+          text: message.text,
+          fallback: message.text
         }]
       });
     else 

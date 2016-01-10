@@ -11,7 +11,7 @@
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 var Botkit = require('botkit');
-var mongo_storage = require('./mongo_storage.js')({mongo_uri:  process.env.mongo_uri});
+var mongo_storage = require('botkit-storage-mongo')({mongoUri:  process.env.mongoUri});
 var _ = require("underscore"); // http://underscorejs.org/
 
 var controller = Botkit.slackbot({
@@ -22,7 +22,7 @@ var controller = Botkit.slackbot({
 var _bots = {};
 function trackBot(bot) {
   _bots[bot.config.token] = bot;
-}
+} 
 
 if (process.env.clientId && process.env.clientSecret) {
   controller.configureSlackApp({
@@ -150,9 +150,9 @@ controller.hears(["help"], ["direct_message", "direct_mention", "mention"], func
   
   bot.startPrivateConversation(message, function(err, convo) {
     if (err) {console.log(err); return;}
-    convo.say("Hi! Ever found yourself :printer: copying messages to other channels? I make that easy.");
-    convo.say("For example, you might say `Let's ask #dev about the overflow bug <@" + bot.identity.id + ">` and I'll copy your message to `#dev`.");
-    convo.say("If I'm useful to you feel free to install me in your other teams or share me with your friends. I'm :free: and :open_book: open source.");
+    convo.say("Hi! Ever found yourself :printer: copying messages to other channels? I make that easy as :cake:.");
+    convo.say("For example in `#general`, you might say `Let's ask #dev about the overflow bug <@" + bot.identity.id + ">` and I'll copy your message to `#dev`.");
+    convo.say("If I'm useful install me in your other teams or share me with your friends. I'm :free: and :open_book: open source.");
     convo.say("Here's my github repo: https://github.com/winthegame/slack-bot-copy and here's a link to instantly install me in another :slack:Slack slack-bot-copy.herokuapp.com/login");
     convo.next();
   });

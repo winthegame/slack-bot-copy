@@ -5,6 +5,7 @@
   "main": "slack-bot-copy.js",
   "dependencies": {
     "botkit": "^0.0.4",
+    "botkit-storage-mongo": "^1.0.2",
     "mongodb": "1.4.x",
     "monk": "^1.0.1",
     "underscore": "^1.8.3"

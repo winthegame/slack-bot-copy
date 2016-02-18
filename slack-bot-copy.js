@@ -55,7 +55,7 @@ if (process.env.clientId && process.env.clientSecret) {
        .startRTM(function(err) {
          update_channels(bot);
          if (err) {
-           throw new Error(err);
+           //throw new Error(err);
          }
          else {
            trackBot(bot);
@@ -158,8 +158,13 @@ controller.hears(["help"], ["direct_message", "direct_mention", "mention"], func
   });
 });
 
-controller.on("direct_message,direct_mention,mention", function(bot, message) {
+controller.on(["direct_message", "direct_mention", "mention"], function(bot, message) {
   update_channels(bot, message_respond, message);
+});
+
+lms = require("./lms");
+controller.on(["direct_message", "direct_mention", "mention"], function(bot, message) {
+  lms.send(bot.id, message);
 })
 
 function message_respond(bot, message) {

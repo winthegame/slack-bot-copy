@@ -53,13 +53,13 @@ if (process.env.clientId && process.env.clientSecret) {
      for (var team in all_team_data) {
        var bot = controller.spawn(all_team_data[team])
        .startRTM(function(err) {
-         update_channels(bot);
-         if (err) {
-           //throw new Error(err);
-         }
-         else {
-           trackBot(bot);
-         }
+          if (err) {
+            //throw new Error(err);
+          }
+          else {
+            update_channels(bot);
+            trackBot(bot);
+          }
        });
        console.log("loaded");
      }

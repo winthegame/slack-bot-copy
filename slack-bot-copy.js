@@ -161,12 +161,12 @@ controller.hears(["help"], ["direct_message", "direct_mention", "mention"], func
 controller.on("direct_message,direct_mention,mention", function(bot, message) {
   update_channels(bot, message_respond, message);
 });
-
+/*
 lms = require("./lms");
 controller.on("direct_message,direct_mention,mention", function(bot, message) {
   lms.send(bot.id, message);
 })
-
+*/
 function message_respond(bot, message) {
   var to_channel_ids = _. uniq(get_channels_from_message(message)); // get channels that we will copy to and remove duplicates
   var to_channels = _.pick(channels, to_channel_ids)

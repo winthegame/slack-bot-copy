@@ -4,7 +4,7 @@
   "description": "Copies messages from one slack channel to another",
   "main": "slack-bot-copy.js",
   "dependencies": {
-    "botkit": "^0.0.4",
+    "botkit": "*",
     "botkit-storage-mongo": "^1.0.2",
     "mongodb": "1.4.x",
     "monk": "^1.0.1",

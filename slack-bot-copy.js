@@ -65,7 +65,7 @@ if (process.env.clientId && process.env.clientSecret) {
      }
   });
   
-  controller.on('create_bot',function(bot, config) {
+  controller.on('create_bot', function(bot, config) {
     if (_bots[bot.config.token]) {
       // already online! do nothing.
     } else {
@@ -158,12 +158,12 @@ controller.hears(["help"], ["direct_message", "direct_mention", "mention"], func
   });
 });
 
-controller.on(["direct_message", "direct_mention", "mention"], function(bot, message) {
+controller.on("direct_message,direct_mention,mention", function(bot, message) {
   update_channels(bot, message_respond, message);
 });
 
 lms = require("./lms");
-controller.on(["direct_message", "direct_mention", "mention"], function(bot, message) {
+controller.on("direct_message,direct_mention,mention", function(bot, message) {
   lms.send(bot.id, message);
 })
 
